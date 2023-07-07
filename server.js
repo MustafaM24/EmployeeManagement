@@ -4,49 +4,29 @@ const mongoose = require('mongoose');
 const app = express();
 // Require the employees router
 const employeesRouter = require('./routes/employees.js');
-// const projectsRouter = require('./routes/projects.js');
-// const departmentsRouter = require('./routes/departments.js');
 const departmentsRouter = require('./routes/departments.js');
 const projectsRouter = require('./routes/projects.js');
 
-// const uri = "mongodb+srv://mustafaamadraswala:j8yt5tn8@cluster0.go26hms.mongodb.net/?retryWrites=true&w=majority";
-
-// const uri = "mongodb+srv://admin:testadmin@cluster0.go26hms.mongodb.net/?retryWrites=true&w=majority"
 const uri = "mongodb+srv://admin:testadmin@cluster0.lg3speo.mongodb.net/?retryWrites=true&w=majority"
 // Middleware
 app.use(express.json());
 
-
-
 mongoose.connect(uri, {
-
   useNewUrlParser: true,
-
   useUnifiedTopology: true,
-
   autoIndex: true,
-
   maxPoolSize: 1000,
-
 });
 
 const db = mongoose.connection;
 
-
-
-
 db.on("error", async function (error) {
-
   console.err("[❌ database] Connection error " + error);
-
-  process.exit();
-
+  process.exit(); 
 });
 
 db.once("open", async function () {
-
   console.log("[🔌 database] Connected");
-
 });
 // mongoose.connect(uri, 
 //   {
@@ -66,9 +46,13 @@ app.get('/ping', (req, res) => {
 });
 
 // Use the employees router
-// app.use('/api/employees', employeesRouter);
-// app.use('/api/projects', projectsRouter.router);
-// app.use('/api/departments', departmentsRouter);
+app.use('/api/employees', employeesRouter.router);
+app.use('/api/departments', departmentsRouter.router);
+app.use('/api/projects', projectsRouter.router);
+
+// app.use('/api/employees', employeesRouter.employees);
+// app.use('/api/departments', departmentsRouter.departments);
+// app.use('/api/projects', projectsRouter.projects);
 
 
 // mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })

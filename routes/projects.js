@@ -1,53 +1,58 @@
 const express = require('express');
 const router = express.Router();
 
-let projects = [];
-
-function generateUniqueId() {
-    // Generate a unique ID using a library or algorithm of your choice
-    // For simplicity, let's use a random number for demonstration purposes
-    return Math.floor(Math.random() * 100000).toString();
-  }
-  
+const Project = require('../models/Project.js');
 
 // Get all projects
-router.get('/', (req, res) => {
-  res.json(projects);
-});
-
-// Create a project
-router.post('/', (req, res) => {
-  const project = req.body;
-  project.id = generateUniqueId();
-  projects.push(project);
-  res.status(201).json(project);
-});
-
-// Update a project
-router.put('/:id', (req, res) => {
-  const id = req.params.id;
-  const updatedProject = req.body;
-  const project = projects.find(proj => proj.id === id);
-  if (project) {
-    project.name = updatedProject.name;
-    // Update other project properties if needed
-    res.json(project);
-  } else {
-    res.status(404).json({ message: 'Project not found' });
-  }
-});
-
-// Delete a project
-router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  const index = projects.findIndex(proj => proj.id === id);
-  if (index !== -1) {
-    projects.splice(index, 1);
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: 'Project not found' });
-  }
-});
-
-
-module.exports = {router, projects};
+router.get('/', async (req, res) => {
+    try {
+      const projects = await Project.find();
+      res.json(projects);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  // Create a project
+  router.post('/', async (req, res) => {
+    try {
+      const project = await Project.create(req.body);
+      res.status(201).json(project);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  // Update a project
+  router.put('/:id', async (req, res) => {
+    try {
+      const updatedProject = await Project.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      if (updatedProject) {
+        res.json(updatedProject);
+      } else {
+        res.status(404).json({ message: 'Project not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  // Delete a project
+  router.delete('/:id', async (req, res) => {
+    try {
+      const deletedProject = await Project.findByIdAndDelete(req.params.id);
+      if (deletedProject) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ message: 'Project not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  module.exports = {router};
