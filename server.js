@@ -6,6 +6,8 @@ const app = express();
 const employeesRouter = require('./routes/employees.js');
 const departmentsRouter = require('./routes/departments.js');
 const projectsRouter = require('./routes/projects.js');
+const auth = require('./middleware/auth.js');
+
 
 const uri = "mongodb+srv://admin:testadmin@cluster0.lg3speo.mongodb.net/?retryWrites=true&w=majority"
 // Middleware
@@ -45,11 +47,25 @@ app.get('/ping', (req, res) => {
   res.sendStatus(200);
 });
 
-// Use the employees router
-app.use('/api/employees', employeesRouter.router);
-app.use('/api/departments', departmentsRouter.router);
-app.use('/api/projects', projectsRouter.router);
 
+// Register a new user
+// app.post('/register', auth.register);
+
+// Login
+// app.post('/login', auth.login);
+
+// Protected routes
+// app.use('/api/employees', auth.requireAuth, employeesRouter);
+// app.use('/api/departments', auth.requireAuth, departmentsRouter);
+// app.use('/api/projects', auth.requireAuth, projectsRouter);
+// Use the employees router
+// app.use('/api/employees', employeesRouter.router);
+// app.use('/api/departments', departmentsRouter.router);
+// app.use('/api/projects', projectsRouter.router);
+// Apply authentication middleware to protected routes
+app.use('/api/employees', employeesRouter);
+app.use('/api/departments',  departmentsRouter); 
+app.use('/api/projects', projectsRouter);
 // app.use('/api/employees', employeesRouter.employees);
 // app.use('/api/departments', departmentsRouter.departments);
 // app.use('/api/projects', projectsRouter.projects);
