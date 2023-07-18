@@ -6,6 +6,9 @@ const app = express();
 const employeesRouter = require('./routes/employees.js');
 const departmentsRouter = require('./routes/departments.js');
 const projectsRouter = require('./routes/projects.js');
+const adminRouter = require('./routes/admin.js');
+
+const auth = require('./authentication/authentication.js');
 
 const uri = "mongodb+srv://admin:testadmin@cluster0.lg3speo.mongodb.net/?retryWrites=true&w=majority"
 // Middleware
@@ -28,80 +31,42 @@ db.on("error", async function (error) {
 db.once("open", async function () {
   console.log("[🔌 database] Connected");
 });
-// mongoose.connect(uri, 
-//   {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//     .then(() => {
-//       console.log('Connected to MongoDB');
-//     })
-//     .catch((error) => {
-//       console.error('Error connecting to MongoDB:', error);
-//     });
-  
 
 app.get('/ping', (req, res) => {
   res.sendStatus(200);
 });
 
-// Use the employees router
-app.use('/api/employees', employeesRouter.router);
-app.use('/api/departments', departmentsRouter.router);
-app.use('/api/projects', projectsRouter.router);
 
-// app.use('/api/employees', employeesRouter.employees);
-// app.use('/api/departments', departmentsRouter.departments);
-// app.use('/api/projects', projectsRouter.projects);
+app.use('/api/employees', employeesRouter);
+// app.use('/api/departments', departmentsRouter);
+// app.use('/api/projects', projectsRouter);
 
+// app.use('/api/admin', adminRouter)
+// Add admin routes
+app.use('/api/admin/employees', adminRouter); // Admin routes for employees
+app.use('/api/admin/departments', departmentsRouter); // Admin routes for departments
+app.use('/api/admin/projects', projectsRouter); // Admin routes for projects
 
-// mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => {
-//     console.log('Connected to MongoDB');
-//   })
-//   .catch((error) => {
-//     console.error('Error connecting to MongoDB:', error);
-//   });
-// // Event for successful connection
-// mongoose.connection.on('connected', () => {
-//   console.log('Connected to MongoDB');
-// });
-// async function connectToMongoDB() {
-//   try {
-//     await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-//     console.log('Connected to MongoDB');
-//   } catch (error) {
-//     console.error('Error connecting to MongoDB:', error);
-//   }
-// }
-// connectToMongoDB();
-
-// // Event for connection error
-// mongoose.connection.on('error', (error) => {
-//   console.error('Error connecting to MongoDB:', error);
-// });
-
-// // Event for disconnected connection
-// mongoose.connection.on('disconnected', () => {
-//   console.log('Disconnected from MongoDB');
-// });
-// mongoose.connect(uri, 
-// {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-//   .then(() => {
-//     console.log('Connected to MongoDB');
-//   })
-//   .catch((error) => {
-//     console.error('Error connecting to MongoDB:', error);
-//   });
+// Employee routes accessible only by admins
+// app.use('/api/employees', adminAuthMiddleware, employeesRouter); // Employee routes
 
 
 // Start the server
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
+// Register a new user
+app.post('/register', auth.register);
+
+// Login
+app.post('/login', auth.login);
+
+// Protected routes
+app.use('/api/employees', auth.requireAuth, adminRouter);
+app.use('/api/departments', auth.requireAuth, departmentsRouter);
+app.use('/api/projects', auth.requireAuth, projectsRouter);
+
 
 // mustafamadraswala
 // PasswordEmployee24,SNctmZJIsmtOLjnP

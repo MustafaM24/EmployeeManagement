@@ -20,18 +20,20 @@ const mongoose = require('mongoose');
 
 const employeeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  employeeId: { type: String, required: true },
-  contact: {
+  // employeeId: { type: String, required: true },
+  email: { type: String, required: true },
+  project: [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
+  department: [{type: mongoose.Schema.Types.ObjectId, ref: 'Department'}],
+  contact: [{
     phone: { type: String },
-    email: { type: String },
     address: { type: String }
-  },
-  personalDetails: {
+  }],
+  personalDetails: [{
     dateOfBirth: { type: Date },
     gender: { type: String },
     maritalStatus: { type: String },
     nationality: { type: String }
-  },
+  }],
   employmentHistory: [{
     employer: { type: String },
     jobTitle: { type: String },
@@ -47,7 +49,7 @@ const employeeSchema = new mongoose.Schema({
     goals: { type: String }
   }],
   documents: [{ type: String }],
-  trainingPrograms: [{ type: String }],
+  trainingPrograms: [{ program: {type: String} }],
   performanceMetrics: [{
     metric: { type: String },
     value: { type: Number }
