@@ -17,11 +17,16 @@
 // module.exports = Employee
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const employeeSchema = new mongoose.Schema({
   name: { type: String, required: true },
   // employeeId: { type: String, required: true },
   email: { type: String, required: true },
+  password: {type: String, required: true},
+  // privilages: {type: String,
+  //   enum: ['employee'],
+  //   required: true,},
   project: [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
   department: [{type: mongoose.Schema.Types.ObjectId, ref: 'Department'}],
   contact: [{
@@ -59,6 +64,26 @@ const employeeSchema = new mongoose.Schema({
     message: { type: String }
   }]
 }, { timestamps: true });
+
+// Before saving the employee, hash the password
+employeeSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+
+  next();
+});
+
+employeeSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+
+
+// const Admin = mongoose.model('Admin', adminSchema);
 
 const Employee = mongoose.model('Employee', employeeSchema);
 

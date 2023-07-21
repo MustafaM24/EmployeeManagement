@@ -56,16 +56,16 @@ app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
 
-// Register a new user
+// Register a new admin
 app.post('/register', auth.register);
 
 // Login
 app.post('/login', auth.login);
 
 // Protected routes
-app.use('/api/employees', auth.requireAuth, adminRouter);
-app.use('/api/departments', auth.requireAuth, departmentsRouter);
-app.use('/api/projects', auth.requireAuth, projectsRouter);
+app.use('/api/employees', adminRouter);
+app.use('/api/departments', departmentsRouter);
+app.use('/api/projects', projectsRouter);
 
 
 // mustafamadraswala

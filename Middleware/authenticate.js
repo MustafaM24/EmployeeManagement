@@ -13,11 +13,9 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: 'No token provided' });
   }
 
-  console.log(token)  
+  console.log(token)
   // remove bearer from token
   const formattedToken = token.split(' ')[1];
-
-
 
   try {
     // Verify the token

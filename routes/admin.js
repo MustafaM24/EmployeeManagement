@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const employeeController = require('../controllers/employeeController')
 const verify = require('../Middleware/authenticate')
 
 // List all employees (only accessible by admins)

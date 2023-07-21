@@ -50,21 +50,6 @@ const login = async (req, res) => {
   }
 };
 
-// Middleware to protect routes
-const requireAuth = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  try {
-    // Verify the token
-    const decoded = jwt.verify(token, secret);
-    // Attach the user ID to the request for further processing
-    req.userId = decoded.userId;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
-  }
-};
 
-module.exports = { register, login, requireAuth };
+
+module.exports = { register, login };

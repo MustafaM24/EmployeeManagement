@@ -1,57 +1,3 @@
-// const mongoose = require('mongoose');
-
-// const adminSchema = new mongoose.Schema({
-//   adminName: { type: String, required: true },
-//   email: {type: String, required: true},
-//   password: {type: String, required: true}
-//   // Add other properties specific to a department
-// }, { timestamps: true });
-
-// const Admin = mongoose.model('Admin', adminSchema);
-
-// module.exports = Admin
-
-// // Create a file named "models.js"
-
-// const mongoose = require('mongoose');
-
-// const AdminSchema = new mongoose.Schema({
-//   Admin: { type: String, required: true },
-//   // project: {type: mongoose.Schema.Types.ObjectId, ref: 'Project'},
-//   projects: [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
-//   department: [{type: mongoose.Schema.Types.ObjectId, ref: 'Department'}],
-//   // Add other properties specific to an Admin
-
-// }, { timestamps: true });
-
-// const Admin = mongoose.model('Admin', AdminSchema);
-
-
-// module.exports = Admin
-
-
-
-
-
-
-
-// const mongoose = require('mongoose');
-
-// const AdminSchema = new mongoose.Schema({
-//   name: { type: String, required: true },
-//   // AdminId: { type: String, required: true },
-//   email: { type: String, required: true },
-//   username: { type: String, required: true },
-//   password: { type: String, required: true },
-// }, { timestamps: true });
-
-// const Admin = mongoose.model('Admin', AdminSchema);
-
-// module.exports = Admin;
-
-
-
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -59,7 +5,9 @@ const adminSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-
+  // privilages: {type: String,
+  //   enum: ["admin"],
+  //   required: true,},
 });
 
 // Before saving the employee, hash the password
