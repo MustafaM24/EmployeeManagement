@@ -8,7 +8,7 @@ const departmentsRouter = require('./routes/departments.js');
 const projectsRouter = require('./routes/projects.js');
 const adminRouter = require('./routes/admin.js');
 
-const auth = require('./authentication/authentication.js');
+const auth = require('./Middleware/authenticate.js');
 
 const uri = "mongodb+srv://admin:testadmin@cluster0.lg3speo.mongodb.net/?retryWrites=true&w=majority"
 // Middleware
@@ -62,10 +62,10 @@ app.post('/register', auth.register);
 // Login
 app.post('/login', auth.login);
 
-// Protected routes
-app.use('/api/employees', auth.requireAuth, adminRouter);
-app.use('/api/departments', auth.requireAuth, departmentsRouter);
-app.use('/api/projects', auth.requireAuth, projectsRouter);
+// // Protected routes
+// app.use('/api/employees', adminRouter);
+// app.use('/api/departments', departmentsRouter);
+// app.use('/api/projects', projectsRouter);
 
 
 // mustafamadraswala

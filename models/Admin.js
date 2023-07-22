@@ -59,7 +59,14 @@ const adminSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+<<<<<<< Updated upstream
 
+=======
+  privileges: { type: String, default: 'admin' },
+  // privilages: {type: String,
+  //   enum: ["admin"],
+  //   required: true,},
+>>>>>>> Stashed changes
 });
 
 // Before saving the employee, hash the password

@@ -1,27 +1,14 @@
-// // Create a file named "models.js"
-
-// const mongoose = require('mongoose');
-
-// const employeeSchema = new mongoose.Schema({
-//   employee: { type: String, required: true },
-//   // project: {type: mongoose.Schema.Types.ObjectId, ref: 'Project'},
-//   projects: [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
-//   department: [{type: mongoose.Schema.Types.ObjectId, ref: 'Department'}],
-//   // Add other properties specific to an employee
-
-// }, { timestamps: true });
-
-// const Employee = mongoose.model('Employee', employeeSchema);
-
-
-// module.exports = Employee
-
 const mongoose = require('mongoose');
 
 const employeeSchema = new mongoose.Schema({
   name: { type: String, required: true },
   // employeeId: { type: String, required: true },
   email: { type: String, required: true },
+<<<<<<< Updated upstream
+=======
+  password: {type: String, required: true},
+  privileges: { type: String, default: 'employee' },
+>>>>>>> Stashed changes
   project: [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
   department: [{type: mongoose.Schema.Types.ObjectId, ref: 'Department'}],
   contact: [{

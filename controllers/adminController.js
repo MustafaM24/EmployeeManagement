@@ -2,7 +2,6 @@ const Employee = require('../models/Employee');
 const Department = require('../models/Department');
 const Project = require('../models/Project');
 const Admin = require('../models/Admin');
-const Auth = require('../authentication/authentication')
 const Mid = require('../Middleware/authenticate')
 
 // // List all employees
@@ -54,6 +53,27 @@ exports.updateEmployee = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+// exports.updateEmployee = async (req, res) => {
+//   try {
+//     const { email } = req.body;
+//     const existingUser = await Employee.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ message: 'Email already registered, Please use another Email' });
+//     }
+//     const updatedEmployee = await Employee.findByIdAndUpdate(
+//       req.params.id,
+//       req.body,
+//       { new: true }
+//     );
+//     if (updatedEmployee) {
+//       res.json(updatedEmployee);
+//     } else {
+//       res.status(404).json({ message: 'Employee not found' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 // Assign a department to an employee
 exports.assignDepartment = async (req, res) => {
