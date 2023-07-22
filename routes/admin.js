@@ -1,13 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
-<<<<<<< Updated upstream
-const verify = require('../Middleware/authenticate')
-=======
 const employeeController = require('../controllers/employeeController')
 const verify = require('../Middleware/verify')
 const checkPrivilege = require('../Middleware/role');
->>>>>>> Stashed changes
 
 // List all employees (only accessible by admins)
 // router.get('/', verify.verifyToken, adminController.getAllEmployees);

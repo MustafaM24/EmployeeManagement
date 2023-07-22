@@ -6,26 +6,8 @@ require('dotenv').config();
 const secret = process.env.SECRET_KEY;
 
 
-<<<<<<< Updated upstream
-const verifyToken = (req, res, next) => {
-  // Get the token from the request headers or other sources
-  const token = req.headers.authorization;
-  
-  if (!token) {
-    // Token not provided
-    return res.status(401).json({ message: 'No token provided' });
-  }
-
-  console.log(token)  
-  // remove bearer from token
-  const formattedToken = token.split(' ')[1];
-
-
-
-=======
 // Register a new Admin
 const register = async (req, res) => {
->>>>>>> Stashed changes
   try {
     const { name, email, password } = req.body;
     // Check if the email is already registered

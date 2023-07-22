@@ -3,17 +3,9 @@ const Department = require('../models/Department');
 const Project = require('../models/Project');
 const Admin = require('../models/Admin');
 const Mid = require('../Middleware/authenticate')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-// // List all employees
-// exports.getAllEmployees = async (req, res) => {
-//   try {
-//     const employees = await Employee.find().populate('department project');
-//     res.json(employees);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// };
 // List all employees
 exports.getAllEmployees = async (req, res) => {
     try {
@@ -24,42 +16,39 @@ exports.getAllEmployees = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   };
-  
+
+
+// // Create an employee
+// exports.createEmployee = async (req, res) => {
+//   try {
+//     const employee = await Employee.create(req.body);
+//     res.status(201).json(employee);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 // Create an employee
 exports.createEmployee = async (req, res) => {
   try {
-    const employee = await Employee.create(req.body);
-    res.status(201).json(employee);
+    // const employee = await Employee.create(req.body);
+    // const Employee,
+    const { name, email, password } = req.body;
+    const existingUser = await Employee.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already registered' });
+    }
+    const employeeUser = await Employee.create(req.body)
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Internal server error' });
   }
 };
 
 // Update an employee
-exports.updateEmployee = async (req, res) => {
-  try {
-    const updatedEmployee = await Employee.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (updatedEmployee) {
-      res.json(updatedEmployee);
-    } else {
-      res.status(404).json({ message: 'Employee not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
 // exports.updateEmployee = async (req, res) => {
 //   try {
-//     const { email } = req.body;
-//     const existingUser = await Employee.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).json({ message: 'Email already registered, Please use another Email' });
-//     }
 //     const updatedEmployee = await Employee.findByIdAndUpdate(
 //       req.params.id,
 //       req.body,
@@ -74,6 +63,35 @@ exports.updateEmployee = async (req, res) => {
 //     res.status(500).json({ message: 'Internal server error' });
 //   }
 // };
+exports.updateEmployee = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const existingUser = await Employee.findOne({ email });
+    const adminUser = await Admin.findOne({ email });
+    const employeeUser = await Employee.findOne({ email });
+    // if i add more user types this code would need to be modified correct? is there a way to make it scalable?
+    if (adminUser || employeeUser) {
+      return res.status(401).json({ message: 'Email already registered, Please use another Email' });
+    }
+
+    // if (existingUser) {
+    //   return res.status(400).json({ message: 'Email already registered, Please use another Email' });
+    // }
+    const user = adminUser || employeeUser;
+    const updatedEmployee = await user.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (updatedEmployee) {
+      res.json(updatedEmployee);
+    } else {
+      res.status(404).json({ message: 'Employee not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 // Assign a department to an employee
 exports.assignDepartment = async (req, res) => {
