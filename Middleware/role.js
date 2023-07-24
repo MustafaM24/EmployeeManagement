@@ -1,21 +1,21 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 const secret = process.env.SECRET_KEY;
 
 const checkPrivilege = (allowedPrivileges) => (req, res, next) => {
-  const token = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
+  // const token = req.headers.authorization;
 
-  const formattedToken = token.split(' ')[1];
+  // if (!token) {
+  //   return res.status(401).json({ message: 'No token provided' });
+  // }
+
+  // const formattedToken = token.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(formattedToken, secret);
+    // const decoded = jwt.verify(formattedToken, secret);
 
     // Check if the privilege is included in the allowedPrivileges array
-    if (allowedPrivileges.includes(decoded.privilege)) {
+    if (allowedPrivileges.includes(req.decoded.privilege)) {
       // Allow access to the route for users with allowed privileges
       next();
     } else {

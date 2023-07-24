@@ -1,6 +1,5 @@
 
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 const secret = process.env.SECRET_KEY;
 
 
@@ -21,7 +20,8 @@ const verifyToken = (req, res, next) => {
     // Verify the token
     const decoded = jwt.verify(formattedToken, secret);
     // Attach the decoded token payload to the request for further processing
-    // req.user = decoded;
+
+    req.decoded = decoded;
     next();
   } catch (error) {
     // Token verification failed
