@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const Joi = require('joi');
+
 
 const app = express();
 // Require the employees router

@@ -5,6 +5,7 @@ const Admin = require('../models/Admin');
 const Mid = require('../Middleware/authenticate')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const Joi = require('joi');
 
 // List all employees
 exports.getAllEmployees = async (req, res) => {
@@ -29,11 +30,29 @@ exports.getAllEmployees = async (req, res) => {
 // };
 
 // Create an employee
-exports.createEmployee = async (req, res) => {
-  try {
+// exports.createEmployee = async (req, res) => {
+//   try {
     // const employee = await Employee.create(req.body);
     // const Employee,
-    const { name, email, password } = req.body;
+    
+exports.createEmployee = async (req, res) => {
+  try{
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(5).required()
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+
+  // if (error) return res.status(400).send(error.details);
+  if (error) {
+    const errors = error.details.map(e => e.message).join(', ');
+    return res.status(400).send(errors);
+  }
+  const {name, email, password } = req.body;
+
+    // const { name, email, password } = req.body;
     const existingUser = await Employee.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' });
@@ -72,13 +91,25 @@ exports.updateEmployee = async (req, res) => {
     // if i add more user types this code would need to be modified correct? is there a way to make it scalable?
     if (adminUser || employeeUser) {
       return res.status(401).json({ message: 'Email already registered, Please use another Email' });
-    }
+    } else{
 
     // if (existingUser) {
     //   return res.status(400).json({ message: 'Email already registered, Please use another Email' });
     // }
-    const user = adminUser || employeeUser;
-    const updatedEmployee = await user.findByIdAndUpdate(
+    // const user = adminUser || employeeUser;
+    // const updatedEmployee = await employeeUser.findByIdAndUpdate(
+    //   req.params.id,
+    //   console.log(req.params.id),
+    //   req.body,
+    //   console.log(req.body,),
+    //   { new: true }
+    // );
+    // if (updatedEmployee) {
+    //   res.json(updatedEmployee);
+    // } else {
+    //   res.status(404).json({ message: 'Employee not found' });
+    // }
+        const updatedEmployee = await Employee.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
@@ -88,7 +119,9 @@ exports.updateEmployee = async (req, res) => {
     } else {
       res.status(404).json({ message: 'Employee not found' });
     }
+  }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Internal server error' });
   }
 };

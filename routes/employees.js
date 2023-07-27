@@ -8,7 +8,7 @@ const checkPrivilege = require('../Middleware/role');
 router.get('/',verify.verifyToken, checkPrivilege.checkPrivilege(['employee', 'admin']), employeeController.getAllEmployees);
 
 // Create an employee
-router.post('/',verify.verifyToken, checkPrivilege.checkPrivilege([]), employeeController.createEmployee);
+router.post('/', employeeController.createEmployee);
 
 // Update an employee
 router.put('/:id', checkPrivilege.checkPrivilege([]), employeeController.updateEmployee);

@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const projectController = require('../controllers/ProjectController');
-
+const verify = require('../Middleware/verify')
+const checkPrivilege = require('../Middleware/role');
 
 // Get all projects
-router.get('/', projectController.getAllProjects);
+router.get('/',verify.verifyToken, checkPrivilege.checkPrivilege(['employee', 'admin']), projectController.getAllProjects);
 
 // Create a project
-router.post('/', projectController.createProject);
+router.post('/',verify.verifyToken, checkPrivilege.checkPrivilege(['admin']), projectController.createProject);
 
 // Update a project
-router.put('/:id', projectController.updateProject);
+router.put('/:id',verify.verifyToken, checkPrivilege.checkPrivilege(['admin']), projectController.updateProject);
 
 // Delete a project
-router.delete('/:id', projectController.deleteProject);
+router.delete('/:id',verify.verifyToken, checkPrivilege.checkPrivilege(['admin']), projectController.deleteProject);
 
 module.exports = router;

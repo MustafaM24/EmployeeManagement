@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const departmentController = require('../controllers/departmentController');
+const verify = require('../Middleware/verify')
+const checkPrivilege = require('../Middleware/role');
 
 // Get all departments
-router.get('/', departmentController.getAllDepartments);
+router.get('/',verify.verifyToken, checkPrivilege.checkPrivilege(['employee', 'admin']), departmentController.getAllDepartments);
 
 // Create a department
-router.post('/', departmentController.createDepartment);
+router.post('/',verify.verifyToken, checkPrivilege.checkPrivilege(['admin']), departmentController.createDepartment);
 
 // Update a department
-router.put('/:id', departmentController.updateDepartment);
+router.put('/:id',verify.verifyToken, checkPrivilege.checkPrivilege(['admin']), departmentController.updateDepartment);
 
 // Delete a department
-router.delete('/:id', departmentController.deleteDepartment);
+router.delete('/:id',verify.verifyToken, checkPrivilege.checkPrivilege(['admin']), departmentController.deleteDepartment);
 
 module.exports = router;

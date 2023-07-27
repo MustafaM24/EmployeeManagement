@@ -3,14 +3,34 @@ const bcrypt = require('bcrypt');
 const Admin = require('../models/Admin');
 const Employee = require('../models/Employee');
 const secret = process.env.SECRET_KEY;
+const Joi = require('joi');
 
 
 // Register a new Admin
+// const register = async (req, res) => {
+//   try {
+//     const { name, email, password } = req.body;
+
 const register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  try{
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(5).required()
+  });
+
+  // const { error } = schema.validate(req.body);
+  const { error } = schema.validate(req.body, { abortEarly: false });
+
+  // if (error) return res.status(400).send(error.details);
+  if (error) {
+    const errors = error.details.map(e => e.message).join(', ');
+    return res.status(400).send(errors);
+  }
+  const { name, email, password } = req.body;
+
     // Check if the email is already registered
-    const existingUser = await Admin.findOne({ email });
+    const existingUser = await Admin.findOne({ email  });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' });
     }
@@ -23,9 +43,24 @@ const register = async (req, res) => {
   }
 };
 
+// const login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
 const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  try{
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(5).required()
+  });
+
+  const { error } = schema.validate(req.body, { abortEarly: false });
+
+  // if (error) return res.status(400).send(error.details);
+  if (error) {
+    const errors = error.details.map(e => e.message).join(', ');
+    return res.status(400).send(errors);
+  }
+  const { email, password } = req.body;
 
     // Check if the user exists in either the Admin or Employee model
     const adminUser = await Admin.findOne({ email });
